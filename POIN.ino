@@ -13,9 +13,19 @@ DHT dht(DHTPIN, DHTTYPE);
 // AIR QUALITY SENSOR
 #include "Air_Quality_Sensor.h"
 AirQualitySensor airsensor(A0);
+
+// BAROMETER
+#include <HP20x_dev.h>
+//#include "Arduino.h"
+#include "Wire.h"
+#include <KalmanFilter.h>
+unsigned char ret = 0;
+
+KalmanFilter p_filter;    //pressure filter
  
 void setup() {
     Serial.begin(9600);
+    delay(150);
 
     // AIR QUALITY SENSOR
     Serial.println("Waiting sensor to init...");
@@ -26,6 +36,10 @@ void setup() {
     } else {
         Serial.println("Sensor ERROR!");
     }
+
+    // BAROMETER
+    HP20x.begin();
+    delay(100);
 }
 void loop() {
     // MOISTURE SENSOR
@@ -70,4 +84,11 @@ void loop() {
     } else if (quality == AirQualitySensor::FRESH_AIR) {
         Serial.println("Fresh air.\n");
     }
+
+    // BAROMETER
+    long Pressure = HP20x.ReadPressure();
+    Serial.println("Pressure:");
+    float p = Pressure / 100.0;
+    Serial.print(p);
+    Serial.println("hPa.\n");
 }
