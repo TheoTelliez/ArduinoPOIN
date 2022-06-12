@@ -18,6 +18,10 @@ AirQualitySensor airsensor(A0);
 #include <HP20x_dev.h>
 #include "Wire.h"
 unsigned char ret = 0;
+
+// SUNLIGHT SENSOR
+#include "SI114X.h"
+SI114X SI1145 = SI114X();
  
 void setup() {
     Serial.begin(9600);
@@ -36,6 +40,13 @@ void setup() {
     // BAROMETER
     HP20x.begin();
     delay(100);
+
+    // SUNLIGHT SENSOR
+    while (!SI1145.Begin()) {
+      Serial.println("Si1145 is not ready!");
+      delay(1000);
+    }
+    Serial.println("Si1145 is ready!");
 }
 void loop() {
     // MOISTURE SENSOR
@@ -87,4 +98,10 @@ void loop() {
     float p = Pressure / 100.0;
     Serial.print(p);
     Serial.println("hPa.\n");
+
+    // SUNLIGHT SENSOR
+    Serial.print("Vis: "); Serial.println(SI1145.ReadVisible());
+    Serial.print("IR: "); Serial.println(SI1145.ReadIR());
+    Serial.print("UV: ");  Serial.println((float)SI1145.ReadUV()/100);
+    delay(1000);
 }
