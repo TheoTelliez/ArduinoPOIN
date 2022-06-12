@@ -16,12 +16,8 @@ AirQualitySensor airsensor(A0);
 
 // BAROMETER
 #include <HP20x_dev.h>
-//#include "Arduino.h"
 #include "Wire.h"
-#include <KalmanFilter.h>
 unsigned char ret = 0;
-
-KalmanFilter p_filter;    //pressure filter
  
 void setup() {
     Serial.begin(9600);
